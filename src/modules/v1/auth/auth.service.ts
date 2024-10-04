@@ -12,16 +12,18 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    @InjectRepository(User) private userRepository: Repository<User>
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async login(loginDto: LoginDto): Promise<{ user: User, access_token: string }> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ user: User; access_token: string }> {
     const { email, password } = loginDto;
     const user = await this.userRepository.findOne({ where: { email } });
-    if(!user) {
+    if (!user) {
       throw new Error('Credenciales inválidas');
     }
-    if(!bcrypt.compareSync(password, user.password)) {
+    if (!bcrypt.compareSync(password, user.password)) {
       throw new Error('Credenciales inválidas');
     }
 

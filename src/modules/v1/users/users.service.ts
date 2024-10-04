@@ -11,19 +11,19 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    ) {}
+  ) {}
   async create(createUserDto: CreateUserDto) {
     const { email, password, ...restOfUser } = createUserDto;
     const userWithEmail = await this.findOneByEmail(email);
-    if(userWithEmail) {
+    if (userWithEmail) {
       throw new ConflictException('Ya existe un usuario con este email');
     }
     const userData = {
       ...restOfUser,
       email: email.toLowerCase().trim(),
       password: await bcrypt.hash(password, 10),
-    }
-    return this.userRepository.save(userData)
+    };
+    return this.userRepository.save(userData);
   }
 
   findAll() {
@@ -46,8 +46,10 @@ export class UsersService {
     const { email, username } = updateUserDto;
     const userWithSameEmail = await this.findOneByEmail(email);
     const userWithSameUsername = await this.findOneByUsername(username);
-    if(userWithSameEmail || userWithSameUsername) {
-      throw new ConflictException('Ya existe un usuario con este email o username');
+    if (userWithSameEmail || userWithSameUsername) {
+      throw new ConflictException(
+        'Ya existe un usuario con este email o username',
+      );
     }
     return this.userRepository.update(id, updateUserDto);
   }

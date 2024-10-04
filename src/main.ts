@@ -13,8 +13,8 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
-    })
-  )
+    }),
+  );
 
   app.setGlobalPrefix('api');
 
